@@ -30,11 +30,17 @@ jobs:
       - name: 4. Install dependencies
         run: npx pnpm@10.26.2 install
 
-      - name: 5. Pull EdgeOne Environment Variables
-        run: npx edgeone pages env pull -n ${{ secrets.EDGEONE_PROJECT_NAME }} -t ${{ secrets.EDGEONE_API_TOKEN }}
+      - name: 5. Install EdgeOne CLI
+        run: npm install --global edgeone@latest
 
-      - name: 6. Build Project
+      - name: 6. Link EdgeOne Project
+        run: edgeone pages link -n ${{ secrets.EDGEONE_PROJECT_NAME }} -t ${{ secrets.EDGEONE_API_TOKEN }}
+
+      - name: 7. Pull EdgeOne Environment Variables
+        run: edgeone pages env pull -t ${{ secrets.EDGEONE_API_TOKEN }}
+
+      - name: 8. Build Project
         run: bun run build
 
-      - name: 7. Deploy to EdgeOne Pages
-        run: npx edgeone pages deploy .next -n ${{ secrets.EDGEONE_PROJECT_NAME }} -t ${{ secrets.EDGEONE_API_TOKEN }} -e production
+      - name: 9. Deploy to EdgeOne Pages
+        run: edgeone pages deploy .next -t ${{ secrets.EDGEONE_API_TOKEN }} -e production
