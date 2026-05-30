@@ -21,6 +21,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: pnpm
 
       - name: 3. Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -31,10 +32,10 @@ jobs:
         run: npx pnpm@10.26.2 install
 
       - name: 5. Install EdgeOne CLI
-        run: npm install --global edgeone@latest
+        run: pnpm add --global edgeone@latest
 
       - name: 6. Link EdgeOne Project
-        run: edgeone pages link -n ${{ secrets.EDGEONE_PROJECT_NAME }} -t ${{ secrets.EDGEONE_API_TOKEN }}
+        run: echo "${{ secrets.EDGEONE_PROJECT_NAME }}" | edgeone pages link -t ${{ secrets.EDGEONE_API_TOKEN }}
 
       - name: 7. Pull EdgeOne Environment Variables
         run: edgeone pages env pull -t ${{ secrets.EDGEONE_API_TOKEN }}
