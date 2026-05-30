@@ -14,7 +14,7 @@ jobs:
       - name: 1. Checkout Code
         uses: actions/checkout@v4
 
-      - name: 3. Setup Node.js
+      - name: 2. Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24.11.1
@@ -32,8 +32,10 @@ jobs:
       - name: 5. Install EdgeOne CLI
         run: pnpm add --global edgeone@latest
 
-      - name: 6. Link EdgeOne Project
-        run: echo "${{ secrets.EDGEONE_PROJECT_NAME }}" | edgeone pages link -t ${{ secrets.EDGEONE_API_TOKEN }}
+      - name: 6. Create EdgeOne Project Link File
+        run: |
+          mkdir -p .edgeone
+          echo '{"Name":"${{ secrets.EDGEONE_PROJECT_NAME }}","ProjectId":"${{ secrets.EDGEONE_PROJECT_ID }}"}' > .edgeone/project.json
 
       - name: 7. Pull EdgeOne Environment Variables
         run: edgeone pages env pull -t ${{ secrets.EDGEONE_API_TOKEN }}
@@ -45,4 +47,4 @@ jobs:
         run: bun run build
 
       - name: 10. Deploy to EdgeOne Pages
-        run: edgeone pages deploy .next -t ${{ secrets.EDGEONE_API_TOKEN }} -e production
+        run: edgeone pages deploy . -t ${{ secrets.EDGEONE_API_TOKEN }} -e production
