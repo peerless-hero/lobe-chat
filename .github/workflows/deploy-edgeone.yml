@@ -1,0 +1,37 @@
+name: Deploy to EdgeOne Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  Deploy-to-EdgeOne:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22]
+
+    steps:
+      - name: 1. Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 2. Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: 3. Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: 4. Install dependencies
+        run: npx pnpm@10.26.2 install
+
+      - name: 5. Build Project
+        run: bun run build
+
+      - name: 6. Deploy to EdgeOne Pages
+        run: npx edgeone pages deploy .next -n ${{ secrets.EDGEONE_PROJECT_NAME }} -t ${{ secrets.EDGEONE_API_TOKEN }} -e production
