@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 24.11.1
 
-      - name: 3. Setup Bun (新增步骤：安装 Bun 环境)
+      - name: 3. Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -31,7 +31,7 @@ jobs:
       - name: 4. Setup PNPM
         uses: pnpm/action-setup@v6
         with:
-          version: latest
+          version: 10.20.0
 
       - name: 5. Install dependencies
         run: pnpm install
