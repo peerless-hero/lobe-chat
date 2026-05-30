@@ -9,38 +9,41 @@ on:
 jobs:
   Deploy-to-EdgeOne:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22]
 
     steps:
       - name: 1. Checkout Code
         uses: actions/checkout@v4
 
-      - name: 2. Setup Node.js
+      - name: 3. Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24.11.1
 
       - name: 3. Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version: 1.2.23
 
-      - name: 4. Install dependencies
-        run: npx pnpm@10.26.2 install
+      - name: 4. Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.2
+          cache: true
 
       - name: 5. Install EdgeOne CLI
         run: pnpm add --global edgeone@latest
 
-      - name: 6. Link EdgeOne Project
+      - name: 6. Install dependencies
+        run: pnpm install
+
+      - name: 7. Link EdgeOne Project
         run: echo "${{ secrets.EDGEONE_PROJECT_NAME }}" | edgeone pages link -t ${{ secrets.EDGEONE_API_TOKEN }}
 
-      - name: 7. Pull EdgeOne Environment Variables
+      - name: 8. Pull EdgeOne Environment Variables
         run: edgeone pages env pull -t ${{ secrets.EDGEONE_API_TOKEN }}
 
-      - name: 8. Build Project
+      - name: 9. Build Project
         run: bun run build
 
-      - name: 9. Deploy to EdgeOne Pages
+      - name: 10. Deploy to EdgeOne Pages
         run: edgeone pages deploy .next -t ${{ secrets.EDGEONE_API_TOKEN }} -e production
