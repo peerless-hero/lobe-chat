@@ -27,20 +27,20 @@ jobs:
       - name: 4. Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 10.26.2
+          version: 10.20.0
           cache: true
 
       - name: 5. Install EdgeOne CLI
         run: pnpm add --global edgeone@latest
 
-      - name: 6. Install dependencies
-        run: pnpm install
-
-      - name: 7. Link EdgeOne Project
+      - name: 6. Link EdgeOne Project
         run: echo "${{ secrets.EDGEONE_PROJECT_NAME }}" | edgeone pages link -t ${{ secrets.EDGEONE_API_TOKEN }}
 
-      - name: 8. Pull EdgeOne Environment Variables
+      - name: 7. Pull EdgeOne Environment Variables
         run: edgeone pages env pull -t ${{ secrets.EDGEONE_API_TOKEN }}
+
+      - name: 8. Install dependencies
+        run: pnpm install
 
       - name: 9. Build Project
         run: bun run build
