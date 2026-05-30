@@ -17,18 +17,18 @@ jobs:
       - name: 1. Checkout Code
         uses: actions/checkout@v6
 
-      - name: 2. Setup Node.js
+      - name: 2. Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.20.0
+
+      - name: 3. Setup Node.js
         uses: actions/setup-node@v5
         with:
           node-version: 24.11.1
 
-      - name: 3. Setup Bun
+      - name: 4. Setup Bun
         uses: oven-sh/setup-bun@v2
-
-      - name: 4. Setup pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          version: 10.20.0
 
       - name: 5. Install EdgeOne CLI
         run: pnpm add --global edgeone@latest
