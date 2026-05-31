@@ -24,6 +24,12 @@ function dynamic<P = NonNullable<unknown>>(
 ): ComponentType<P> {
   const LazyComponent = lazy(async () => {
     const mod = await loader();
+    // Guard: prevent 'default' in undefined TypeError when import was silently swallowed
+    if (!mod) {
+      throw new Error(
+        'dynamic(): received undefined module — a dynamic import likely failed silently',
+      );
+    }
     if (typeof mod === 'function') {
       return { default: mod as ComponentType<P> };
     }

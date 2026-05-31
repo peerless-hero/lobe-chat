@@ -22,6 +22,12 @@ async function importModule<T>(importFn: () => Promise<T>): Promise<T> {
 }
 
 function resolveLazyModule<P>(module: { default: ComponentType<P> } | ComponentType<P>) {
+  // Guard: prevent 'default' in undefined TypeError when import was silently swallowed
+  if (!module) {
+    throw new Error(
+      'resolveLazyModule: received undefined module — a dynamic import likely failed silently',
+    );
+  }
   if (typeof module === 'function') {
     return { default: module };
   }
