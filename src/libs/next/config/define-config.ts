@@ -116,6 +116,15 @@ export function defineConfig(config: CustomNextConfig) {
               value: 'public, max-age=31536000, immutable',
             },
           ],
+          source: '/spa/:path*',
+        },
+        {
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable',
+            },
+          ],
           source: '/icons/(.*).(png|jpe?g|gif|svg|ico|webp)',
         },
         {
